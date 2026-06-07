@@ -20,7 +20,7 @@ app.use(
       "http://localhost:5173", // تطوير Frontend
       "http://localhost:5174", // تطوير Dashboard
       "https://car-showroom-0ub5.onrender.com", // Frontend على Render
-      "https://dashboard-almalih.onrender.com" // Dashboard على Render
+      "https://car-showroom-dashbord.onrender.com" // Dashboard على Render
     ],
     credentials: true
   })
