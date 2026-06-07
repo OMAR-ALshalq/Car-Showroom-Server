@@ -19,7 +19,7 @@ app.use(
     origin: [
       "http://localhost:5173", // تطوير Frontend
       "http://localhost:5174", // تطوير Dashboard
-      "https://car-showroom-4tod.onrender.com", // Frontend على Render
+      "https://car-showroom-1eg8.onrender.com", // Frontend على Render
       "https://car-showroom-dashbord.onrender.com" // Dashboard على Render
     ],
     credentials: true
