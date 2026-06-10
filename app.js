@@ -965,51 +965,51 @@ app.get("/api/search/:brand", async (req, res) => {
 });
 
 // end
-app.put("/api/update-old-qrcodes", async (req, res) => {
-  try {
-    // جلب كل السيارات القديمة
-    const oldCars = await Car.find({ qrCode: "https://www.youtube.com/" });
+// app.put("/api/update-old-qrcodes", async (req, res) => {
+//   try {
+//     // جلب كل السيارات القديمة
+//     const oldCars = await Car.find({ qrCode: "https://www.youtube.com/" });
 
-    if (oldCars.length === 0) {
-      return res.json({
-        success: true,
-        message: "✅ لا توجد سيارات تحتاج تحديث",
-        updatedCount: 0
-      });
-    }
+//     if (oldCars.length === 0) {
+//       return res.json({
+//         success: true,
+//         message: "✅ لا توجد سيارات تحتاج تحديث",
+//         updatedCount: 0
+//       });
+//     }
 
-    let updatedCount = 0;
-    let failedCars = [];
+//     let updatedCount = 0;
+//     let failedCars = [];
 
-    // تحديث كل سيارة على حدة مع معالجة الأخطاء
-    for (const car of oldCars) {
-      try {
-        car.qrCode = `https://car-showroom-36rh.onrender.com/detailsCar/${car._id}#detailsCar`;
-        await car.save();
-        updatedCount++;
-        console.log(`✅ تم تحديث السيارة: ${car.brand} ${car.model}`);
-      } catch (carError) {
-        console.error(`❌ فشل تحديث السيارة ${car._id}:`, carError.message);
-        failedCars.push(car._id);
-      }
-    }
+//     // تحديث كل سيارة على حدة مع معالجة الأخطاء
+//     for (const car of oldCars) {
+//       try {
+//         car.qrCode = `https://car-showroom-36rh.onrender.com/detailsCar/${car._id}#detailsCar`;
+//         await car.save();
+//         updatedCount++;
+//         console.log(`✅ تم تحديث السيارة: ${car.brand} ${car.model}`);
+//       } catch (carError) {
+//         console.error(`❌ فشل تحديث السيارة ${car._id}:`, carError.message);
+//         failedCars.push(car._id);
+//       }
+//     }
 
-    res.json({
-      success: true,
-      message: `✅ تم تحديث ${updatedCount} من أصل ${oldCars.length} سيارة`,
-      updatedCount: updatedCount,
-      totalCount: oldCars.length,
-      failedCount: failedCars.length,
-      ...(failedCars.length > 0 && { failedCars: failedCars })
-    });
-  } catch (error) {
-    console.error("❌ خطأ في التحديث:", error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+//     res.json({
+//       success: true,
+//       message: `✅ تم تحديث ${updatedCount} من أصل ${oldCars.length} سيارة`,
+//       updatedCount: updatedCount,
+//       totalCount: oldCars.length,
+//       failedCount: failedCars.length,
+//       ...(failedCars.length > 0 && { failedCars: failedCars })
+//     });
+//   } catch (error) {
+//     console.error("❌ خطأ في التحديث:", error);
+//     res.status(500).json({
+//       success: false,
+//       error: error.message
+//     });
+//   }
+// });
 
 
 
