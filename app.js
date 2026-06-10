@@ -242,14 +242,7 @@ app.get("/api/cars", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-// app.get("/api/cars", async (req, res) => {
-//   try {
-//     const cars = await Car.find();
-//     res.json(cars);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
+
 
 // ✅ API لأحدث 8 سيارات
 app.get("/api/cars/latest", async (req, res) => {
@@ -299,67 +292,9 @@ app.get("/api/cars/:id", async (req, res) => {
   }
 });
 
-// app.post("/api/add/cars", async (req, res) => {
-//   try {
-//     const { brand, model, bodyType } = req.body;
 
-//     // 1. معالجة البراند (Brand)
-//     let brandDoc = await Classification.findOne({ name: brand, type: "brand" });
-//     if (!brandDoc) {
-//       brandDoc = await Classification.create({ name: brand, type: "brand" });
-//     }
 
-//     // 2. معالجة نوع الجسم (Body Type)
-//     let bodyTypeDoc = await Classification.findOne({
-//       name: bodyType,
-//       type: "bodyType"
-//     });
-//     if (!bodyTypeDoc) {
-//       bodyTypeDoc = await Classification.create({
-//         name: bodyType,
-//         type: "bodyType"
-//       });
-//     }
-
-//     // 3. معالجة الموديل (Model)
-//     let modelDoc = await Classification.findOne({
-//       name: model,
-//       type: "model",
-//       parentId: brandDoc._id
-//     });
-
-//     if (!modelDoc) {
-//       modelDoc = await Classification.create({
-//         name: model,
-//         type: "model",
-//         parentId: brandDoc._id
-//       });
-//     }
-
-//     // 4. حفظ السيارة أولاً للحصول على الـ ID
-//     const newCar = new Car(req.body);
-//     let savedCar = await newCar.save();
-
-//     // 5. إنشاء رابط الـ QR Code باستخدام الـ ID الخاص بالسيارة المحفوظة
-//     // استبدل 'yourdomain.com' برابط موقعك الحقيقي
-//     // const qrLink = `https://yourdomain.com/car/${savedCar._id}`;
-//     const qrLink = `https://www.youtube.com/`;
-
-//     // 6. تحديث حقل qrCode في سجل السيارة
-//     savedCar.qrCode = qrLink;
-//     await savedCar.save();
-
-//     res.status(201).json({
-//       message: "تم إضافة السيارة وتحديث التصنيفات وإنشاء رابط QR بنجاح",
-//       car: savedCar
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
-// test
+// Add Car
 app.post("/api/add/cars", async (req, res) => {
   try {
     const { brand, model, bodyType } = req.body;
@@ -674,43 +609,7 @@ app.post("/api/add/classifications", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-// app.post("/api/add/classifications", async (req, res) => {
-//   try {
-//     const { brand, model, bodyType, imageUrl } = req.body;
 
-//     // 1. التعامل مع الماركة (الجد)
-//     // نستخدم findOneAndUpdate مع upsert لإنشاء الماركة إذا لم تكن موجودة وتحديث صورتها
-//     let brandDoc = await Classification.findOneAndUpdate(
-//       { name: brand, type: "brand" },
-//       { name: brand, type: "brand", parentId: null, image: imageUrl },
-//       { upsert: true, new: true }
-//     );
-
-//     // 2. التعامل مع الموديل (الأب)
-//     // نربطه بالماركة التي وجدناها أو أنشأناها أعلاه
-//     let modelDoc = await Classification.findOneAndUpdate(
-//       { name: model, type: "model", parentId: brandDoc._id },
-//       { name: model, type: "model", parentId: brandDoc._id },
-//       { upsert: true, new: true }
-//     );
-
-//     // 3. التعامل مع نوع الهيكل (الابن)
-//     // نربطه بالموديل، ونخزن الصورة فيه أيضاً إذا كنت تريد ذلك
-//     let bodyTypeDoc = await Classification.findOneAndUpdate(
-//       { name: bodyType, type: "bodyType", parentId: modelDoc._id },
-//       { name: bodyType, type: "bodyType", parentId: modelDoc._id },
-//       { upsert: true, new: true }
-//     );
-
-//     res.status(201).json({
-//       success: true,
-//       message: "تم حفظ التصنيفات بنجاح",
-//       data: bodyTypeDoc
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
 
 // حذف تصنيف من خلال ال Id الخاص به
 // مسار حذف تصنيف معين بناءً على معرفه
@@ -965,53 +864,6 @@ app.get("/api/search/:brand", async (req, res) => {
 });
 
 // end
-// app.put("/api/update-old-qrcodes", async (req, res) => {
-//   try {
-//     // جلب كل السيارات القديمة
-//     const oldCars = await Car.find({ qrCode: "https://www.youtube.com/" });
-
-//     if (oldCars.length === 0) {
-//       return res.json({
-//         success: true,
-//         message: "✅ لا توجد سيارات تحتاج تحديث",
-//         updatedCount: 0
-//       });
-//     }
-
-//     let updatedCount = 0;
-//     let failedCars = [];
-
-//     // تحديث كل سيارة على حدة مع معالجة الأخطاء
-//     for (const car of oldCars) {
-//       try {
-//         car.qrCode = `https://car-showroom-36rh.onrender.com/detailsCar/${car._id}#detailsCar`;
-//         await car.save();
-//         updatedCount++;
-//         console.log(`✅ تم تحديث السيارة: ${car.brand} ${car.model}`);
-//       } catch (carError) {
-//         console.error(`❌ فشل تحديث السيارة ${car._id}:`, carError.message);
-//         failedCars.push(car._id);
-//       }
-//     }
-
-//     res.json({
-//       success: true,
-//       message: `✅ تم تحديث ${updatedCount} من أصل ${oldCars.length} سيارة`,
-//       updatedCount: updatedCount,
-//       totalCount: oldCars.length,
-//       failedCount: failedCars.length,
-//       ...(failedCars.length > 0 && { failedCars: failedCars })
-//     });
-//   } catch (error) {
-//     console.error("❌ خطأ في التحديث:", error);
-//     res.status(500).json({
-//       success: false,
-//       error: error.message
-//     });
-//   }
-// });
-
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
