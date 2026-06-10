@@ -408,8 +408,8 @@ app.post("/api/add/cars", async (req, res) => {
 
     let savedCar = await newCar.save();
 
-    // 5. إنشاء الـ QR Code
-    savedCar.qrCode = `https://www.youtube.com/`;
+    // 5. إنشاء الـ QR Code بالرابط الصحيح لصفحة التفاصيل
+    savedCar.qrCode = `https://car-showroom-36rh.onrender.com/detailsCar/${savedCar._id}#detailsCar`;
     await savedCar.save();
 
     res.status(201).json({
