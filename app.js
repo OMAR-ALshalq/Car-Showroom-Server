@@ -965,6 +965,41 @@ app.get("/api/search/:brand", async (req, res) => {
 });
 
 // end
+app.put("/api/update-old-qrcodes", async (req, res) => {
+  try {
+    const result = await Car.updateMany(
+      { qrCode: "https://www.youtube.com/" },
+      [
+        {
+          $set: {
+            qrCode: {
+              $concat: [
+                "https://car-showroom-36rh.onrender.com/detailsCar/",
+                { $toString: "$_id" },
+                "#detailsCar"
+              ]
+            }
+          }
+        }
+      ]
+    );
+
+    res.json({
+      success: true,
+      message: `✅ تم تحديث ${result.modifiedCount} سيارة بنجاح`,
+      modifiedCount: result.modifiedCount,
+      matchedCount: result.matchedCount
+    });
+  } catch (error) {
+    console.error("❌ خطأ في التحديث:", error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
