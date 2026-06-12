@@ -19,7 +19,7 @@ const carSchema = new mongoose.Schema(
       capacityLitre: { type: Number },
       capacityCC: { type: Number },
       transmission: { type: String },
-      fuelType: { type: String }
+      fulType: { type: String }
     },
     qrCode: { type: String },
     description: { type: String },
